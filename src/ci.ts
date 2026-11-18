@@ -13,6 +13,9 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+# onnxruntime-node (the local voice) tries to fetch a CUDA build on Linux; reporeel only needs the CPU one.
+env:
+  ONNXRUNTIME_NODE_INSTALL_CUDA: skip
 # Pull requests are untrusted: they get a read-only token. Only the release job can write.
 permissions:
   contents: read

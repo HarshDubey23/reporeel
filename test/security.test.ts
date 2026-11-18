@@ -136,4 +136,8 @@ test('the generated workflow gives pull requests a read-only token', () => {
   assert.doesNotMatch(check, /write|secrets\./, 'the pull-request job has no write permission and no secrets');
   assert.match(refresh, /if: github\.event_name != 'pull_request'[\s\S]*permissions:\n      contents: write/);
   assert.doesNotMatch(yml, /pull_request_target/);
+  assert.match(top, /
+env:
+  ONNXRUNTIME_NODE_INSTALL_CUDA: skip
+/, 'npx installs the voice engine, which must not fetch CUDA on a runner');
 });

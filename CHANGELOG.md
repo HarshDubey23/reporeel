@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Workflows (this repo's, and the one `reporeel ci` writes) set `ONNXRUNTIME_NODE_INSTALL_CUDA=skip`: on Linux the voice engine's installer tried to download a CUDA build that now answers 404, which failed `npm ci`.
 - `check` no longer reports a render as out of date just because a file was checked out with Windows line endings: hashes ignore CRLF versus LF.
 - `--sandbox [image]` runs terminal scenes and `verify` steps in a Docker container: only the repository is visible, no network unless `--net`, none of your environment, bounded memory, CPU, processes and time. `app.start` is not covered.
 - `plan --audience executive|developer|architecture|walkthrough|demo` for different cuts of the same repository (Claude planner only).

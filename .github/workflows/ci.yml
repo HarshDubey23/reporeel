@@ -1,5 +1,8 @@
 name: CI
 on: [push, pull_request]
+# onnxruntime-node (the local voice) tries to fetch a CUDA build on Linux; reporeel only needs the CPU one.
+env:
+  ONNXRUNTIME_NODE_INSTALL_CUDA: skip
 jobs:
   test:
     runs-on: ubuntu-latest
