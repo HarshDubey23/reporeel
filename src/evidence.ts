@@ -29,7 +29,7 @@ function read(root: string, file: string): string[] | string {
   const p = join(root, file);
   if (/^([\\/]|[a-z]:)/i.test(file) || !existsSync(p)) return `${file}: no such file in the repository`;
   if (/^\.\.|^([\\/]|[a-z]:)/i.test(relative(realpathSync(root), realpathSync(p)))) return `${file}: is outside the repository`;
-  try { return readFileSync(p, 'utf8').split('\n'); } catch { return `${file}: cannot be read`; }
+  try { return readFileSync(p, 'utf8').split(/\r?\n/); } catch { return `${file}: cannot be read`; }
 }
 
 function resolve(root: string, g: Graph, e: Evidence): Ref | string {

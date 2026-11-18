@@ -141,6 +141,17 @@ test('a render goes stale when the lines it cites change, and only then', () => 
   assert.deepEqual(stale(dir, rendered).map(s => [s.scene, s.changed]), [[1, ['src/auth.ts']], [2, ['src/util.ts', 'app/models.py#User']]]);
 });
 
+test('re-saving a cited file with Windows line endings does not make a render stale', () => {
+  const dir = repo();
+  const board = sb([{ type: 'code', file: 'src/auth.ts', lines: [5, 8] }, { type: 'stats', items: [{ value: '1', label: 'x' }], evidence: [{ kind: 'symbol', id: 'src/auth.ts#Guard' }] }]);
+  const rendered = JSON.parse(JSON.stringify(check(board, dir)));
+  writeFileSync(join(dir, 'src/auth.ts'), FILES['src/auth.ts'].replaceAll('\n', '\r\n'));
+  assert.deepEqual(stale(dir, rendered), [], 'same text, different line endings');
+  assert.equal(analyze(dir).modules.find(m => m.file === 'src/auth.ts')!.hash, analyze(repo()).modules.find(m => m.file === 'src/auth.ts')!.hash);
+  writeFileSync(join(dir, 'src/auth.ts'), FILES['src/auth.ts'].replace('return hash(t)', 'return t').replaceAll('\n', '\r\n'));
+  assert.equal(stale(dir, rendered).length, 2, 'a real edit is still caught');
+});
+
 test('the explorer page carries the graph as data and cannot be broken out of by a file name', () => {
   const g = analyze(repo());
   // Such a name cannot exist on every filesystem, so it is put straight into the graph.

@@ -30,7 +30,8 @@ const SKIP = /(^|\/)(node_modules|dist|build|\.next|vendor|__pycache__|\.venv|ve
 const TEST = /(^|\/)(tests?|__tests__|specs?)\/|[._-](test|spec)\.[a-z]+$|(^|\/)test_[^/]+\.py$|_test\.py$/;
 const JS_EXT = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'];
 
-export const sha = (s: string | Buffer) => createHash('sha256').update(s).digest('hex').slice(0, 16);
+// Line endings are not content: a Windows checkout (autocrlf) and the Linux CI one must hash the same.
+export const sha = (s: string | Buffer) => createHash('sha256').update(s.toString().replaceAll('\r\n', '\n')).digest('hex').slice(0, 16);
 
 function jsSymbols(file: string, lines: string[]): Sym[] {
   const out: Sym[] = [];
